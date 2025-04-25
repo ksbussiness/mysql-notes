@@ -1,3 +1,92 @@
+
+
+INDEXING IN MY SQL:
+============================= >
+
+..> By creating indexes, MySQL can quickly locate and retrieve relevant data, reducing the need for full table scans and minimizing response times.
+
+..> The index is a data structure that provides a quick lookup mechanism for faster data retrieval.
+
+..> 
+
+NEED FOR THE INDEXING :
+----------------------------- >
+
+
+Efficient Data Retrieval: Indexing allows the database engine to quickly locate and retrieve data, significantly speeding up query execution.
+
+Improved Query Performance: Indexed columns enhance the performance of SELECT, JOIN, and WHERE clauses by providing a faster search path.
+
+Ensuring Uniqueness: Unique indexes ensure that the values in specified columns are unique, preventing duplicate entries and maintaining data integrity.
+
+Optimized Sorting and Grouping: Indexes improve the efficiency of sorting (ORDER BY) and grouping (GROUP BY) operations by organizing data in a structured manner.
+
+Reduced Full Table Scans: By minimizing the need for full table scans, indexes reduce the load on the database and decrease response times, especially for large tables.
+
+
+INDEX CREATION:
+
+..> At the time of table creation only:
+
+syntax:
+
+CREATE TABLE p_index (
+    column1 INT PRIMARY KEY,
+    column2 INT NOT NULL,
+    column3 INT NOT NULL,
+    column4 VARCHAR(20),
+    INDEX (column2, column3)
+);
+
+ex:
+
+create table stu(
+id INT PRIMARY KEY AUTO_INCREMENT,
+name VARCHAR(200),
+address VARCHAR(20),
+age int,
+roll_num int,
+index (name,age)
+);
+
+..> creation of the index for an existing table:
+------------------------------------ >------------------------------------ >
+syntax:
+
+CREATE INDEX index_name
+ON table_name (column_names);
+
+ex:
+create index myindex on demosai(name);
+
+
+.> TO Check index details and what for the query :
+------------------------------------------------------------------------->
+EXPLAIN SELECT * FROM products WHERE category = 'Electronics';
+
+
+.> To show index keys :
+------------------------------------------------------------------------ >
+.>show index from products;
+
+ show index from <table_name>;
+
+.>for detail information about the indexs we use this :
+
+SELECT * 
+FROM INFORMATION_SCHEMA.STATISTICS 
+WHERE TABLE_SCHEMA = 'database_name' AND TABLE_NAME = 'table_name';
+
+------------------------------------------------------------------------------>
+
+
+...> to delet the index of a table
+.> DROP index <index_name> on <table_name>;
+
+
+
+
+
 What Happens Internally When You Create an Index?
 Let’s go step by step:
 
