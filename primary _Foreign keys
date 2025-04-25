@@ -129,3 +129,4 @@ ON DELETE NO ACTION
 Outcome: Attempting to delete customer with customer_id = 1 will result in an error if orders 101 or 102 exist.
 Note: In MySQL, NO ACTION is functionally equivalent to RESTRICT.
 
+NOTE: IN All these cases deletion of teh customer_keys pefers to the deleteion of teh keys from teh parent table
