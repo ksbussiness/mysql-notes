@@ -1,0 +1,181 @@
+TRIGGERS:
+
+..> Database triggers are specialized procedures that automatically respond to certain events on a table or view. 
+
+..> These events include actions such as INSERT, UPDATE, or DELETE.
+
+..> In MySQL, triggers are useful concepts for automating THE TASKS.
+
+..> A MySQL trigger is a stored program (with queries) which is executed automatically to respond to a specific event such as insertion, updation or deletion occurring in a table.
+
+SYNTAX: To create the triggers in MYSQL:
+
+			CREATE TRIGGER <Name_Of_Trigger>
+
+			{BEFORE | AFTER } { INSERT or UPDATE or DELETE }
+
+			ON <TABLE_NAME>
+
+			FOR EACH ROW
+			BEGIN
+			<...> SQL STATEMENTS
+			END;
+
+
+
+Parameters
+trigger_name: The name of the trigger.
+{BEFORE | AFTER}: Specifies whether the trigger action should happen before or after the triggering event.
+{INSERT | UPDATE | DELETE}: Specifies the event that will activate the trigger.
+table_name: The name of the table to which the trigger is attached.
+FOR EACH ROW: Specifies that the trigger will be executed once for each row affected by the triggering event.
+BEGIN ... END: The block of SQL statements to be executed when the trigger is activated.
+
+
+note the sql mode: 
+
+{{ 
+
+.> SELECT @@GLOBAL.sql_mode; { only_full_group_by,STRICT_TRANS_TABLE }
+
+
+.> DROP TRIGGER IF EXISTS update_ahh;
+
+
+.> show triggers
+
+
+.> You can increase the wait_timeout and interactive_timeout settings to allow longer-running operations.
+
+.> SET GLOBAL wait_timeout = 300;
+.> SET GLOBAL interactive_timeout = 300;
+
+
+
+.> In the trigger we can not keep the select * from statements
+DELIMITER //
+CREATE TRIGGER update_ahh
+BEFORE UPDATE ON ahh
+FOR EACH ROW
+BEGIN
+    -- Add your operations here, e.g., updating values or logging changes.
+    SELECT * FROM ahh;
+END;
+//
+DELIMITER ;
+
+
+}}
+
+
+
+we have the different types of the  triggers and combinations:
+
+BEFORE /AFTER [[ update ,INSERT,DELETE ]]
+
+ 
+1) BEFORE UPDATE :
+
+delimiter $$
+create trigger before_update_agg
+before update on ahh
+for each row
+ begin
+ insert into mini_ahh values('donsrinu');
+end$$
+delimiter;
+
+
+update ahh set balance=balance+200 where id=1;
+select * from ahh;
+select * from mini_ahh;
+
+
+2) AFTER UPDATE
+
+delimiter $$
+create trigger after_update_agg
+after update on ahh
+for each row
+begin
+upadte  mini_ahh set name='SANJAY';
+END$$
+delimiter;
+
+update ahh set balance=balance+2000 where id=1;
+
+select * from ahh;
+select * from mini_ahh;
+
+3) BEFORE INSERT
+
+delimiter $$
+create trigger before_insert_agg
+before insert on ahh
+for each row
+begin
+insert into mini_ahh values('MANU');
+end$$
+
+insert into ahh values(null,'ramya',2000);
+
+select * from ahh;
+select * from mini_ahh;
+
+4) AFTER INSERT
+
+delimiter $$
+create trigger after_insert_agg
+after insert on ahh
+for each row
+begin
+delete from mini_ahh where name='SANJAY';
+end$$
+
+select * from ahh;
+select * from mini_ahh;
+
+insert into ahh values(null,'sanju',1009);
+
+select * from ahh;
+select * from mini_ahh;
+
+
+5) BEFORE DELETE
+
+delimiter $$
+create trigger before_delete_agg
+before delete on ahh
+for each row
+begin
+insert into mini_ahh values('sachin'),values('sai');
+end$$
+
+select * from ahh;
+select * from mini_ahh;
+
+delete from ahh where id=5;
+
+select * from ahh;
+select * from mini_ahh;
+
+
+6) AFTER DELETE
+
+delimiter $$
+create trigger after_delete_agg
+after delete on ahh
+for each row
+begin
+insert into mini_ahh values('mad');
+end$$
+
+
+select * from ahh;
+select * from mini_ahh;
+
+delete from ahh where id=1;
+
+
+select * from ahh;
+select * from mini_ahh;
