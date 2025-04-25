@@ -33,3 +33,27 @@ Navigate to Preferences > SQL Editor.
 Uncheck the option "Safe Updates (rejects UPDATEs and DELETEs with no keys in WHERE clause)."
 
 Restart your MySQL connection for the changes to take effect.
+=============================================================================================================================================================
+
+Common Storage Engines in MySQL:
+------------------------------------- >
+
+Storage Engine	Description
+InnoDB	✅ Default engine since MySQL 5.5. Supports transactions, row-level locking, foreign keys. Best for most applications.
+MyISAM	🚫 No transactions or foreign keys. Fast read-heavy operations. Deprecated for many use cases.
+MEMORY	🧠 Stores all data in RAM. Very fast, but volatile (data is lost on restart).
+CSV	📄 Stores data in CSV files. Easy for import/export but limited SQL features.
+ARCHIVE	🗃️ Optimized for storing large amounts of historical, read-only data.
+BLACKHOLE	🕳️ Accepts data but doesn’t store it (used for replication or testing).
+FEDERATED	🌐 Accesses data in remote MySQL servers. Not commonly used.
+EXAMPLE	📘 Dummy engine for developers to create new engines. Doesn't store data.
+
+✅ Commonly Used Today:
+------------------------------------- >
+
+InnoDB → Best for general use.
+MEMORY → Temporary or cache tables.
+MyISAM → Legacy support.
+
+You can check available engines in your MySQL with:
+SHOW ENGINES;
