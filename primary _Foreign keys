@@ -58,3 +58,17 @@ Primary Key: OrderID
 Foreign Key: CustomerID → Customers(CustomerID)
 
 
+
+ MySQL Foreign Key Requirements :
+========================================= >
+Both tables must use InnoDB storage engine.
+
+Parent column must be Primary Key or Unique.
+
+Both columns (parent and child) must have:
+
+Same data type and length.
+
+Same character set and collation for string types.
+
+Index must exist on the foreign key column (auto-created if not).
