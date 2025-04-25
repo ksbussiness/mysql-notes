@@ -1,0 +1,115 @@
+What Happens Internally When You Create an Index?
+Let’s go step by step:
+
+1. New Data Structure Is Created
+The database creates a new internal data structure (usually a B-tree or B+ tree).
+
+This structure stores the indexed field's value and a pointer to the original document (like its ID).
+
+2. Existing Documents Are Scanned
+The database goes through all your existing documents in the collection.
+
+It picks the value of the field you want to index (e.g., username) and adds it to the index structure with a link to the document.
+
+3. Sorted Order
+The values in the index are automatically sorted.
+
+This sorting helps the database quickly jump to results during a query, instead of checking every document one by one.
+
+4. Stored on Disk (and RAM)
+The index is stored on disk, just like your documents.
+
+When a query runs, the index can be cached in RAM to make things even faster.
+
+5. New Documents Update the Index
+Whenever a new document is added, or an indexed field is updated, the index also gets updated automatically.
+
+
+
+Primary Key Special Case
+In InnoDB (default engine), if you create a primary key, it's a clustered index.
+
+That means the table rows are stored in the order of the primary key, not separately like in MongoDB.
+
+5. Secondary Indexes
+Other indexes (non-primary) are called secondary indexes.
+
+They point to the primary key, and then the primary key points to the full row.
+
+6. Insert/Update Will Update Index
+Any time you insert or update a row, MySQL also updates the index automatically.
+
+
+primary index in mysql:
+==============================>
+
+In MySQL, especially with the InnoDB storage engine (which is the default), the primary key is treated as the default index — and it's very special.
+
+Let me explain it clearly in simple words:
+
+✅ What is a Primary Key?
+A primary key is a unique identifier for each row in a table.
+
+You must not have duplicate or NULL values in this column.
+
+Example: id, email, roll_number, etc.
+
+✅ Is the Primary Key Also an Index?
+YES — when you create a primary key, MySQL automatically creates a special index on that column.
+
+✅ Why Is It Special?
+Because in InnoDB, the primary key is a:
+
+Clustered Index
+
+This means:
+
+The actual row data is stored along with the index, sorted by the primary key.
+
+There is no separate storage for the table rows — they are embedded inside the primary index.
+
+note points:
+======================= >
+Yes, you can delete the primary index, but only by dropping the primary key from the table.
+
+In MySQL, the primary key itself acts as the primary index. So, when you drop the primary key, you're also deleting the primary index.
+
+
+
+...> if you want to remove the primary index, you must drop the primary key.
+
+multi key index in mysql:
+
+==================================== >
+
+CREATE INDEX idx_name_email ON users(name, email);
+
+
+
+Like MongoDB's multikey index, but for flat data.
+
+Useful for queries that filter or sort by both columns together.
+
+🔔 Important rule in MySQL:
+
+
+The order matters:
+This index helps with WHERE name = 'x' AND email = 'y'
+but not with WHERE email = 'y' alone.
+
+
+FULLTEXT index in the mysql:
+
+FULLTEXT Index (like MongoDB's text index)
+
+CREATE FULLTEXT INDEX idx_bio ON users(bio);
+For full-text search: "find me users who mention 'developer'"
+
+Works on CHAR, VARCHAR, TEXT columns.
+
+Use MATCH(...) AGAINST(...) in queries.
+
+HASH Index (Limited Use)
+Only supported in MEMORY tables.
+
+InnoDB uses B-tree by default, but you can simulate hash behavior using generated columns + indexes.
