@@ -1,0 +1,160 @@
+Transactions IN MYSQL :
+------------------------------ >
+
+
+
+
+A transaction is a set of SQL operations that are executed together as a single unit of work.
+
+Definition:
+A transaction in MySQL is a sequence of one or more SQL statements that are executed as a single logical unit, where:
+
+Either all changes are applied (committed)
+
+Or none are applied (rolled back) if something goes wrong
+
+
+START TRANSACTION;
+
+-- Step 1
+UPDATE accounts SET balance = balance - 1000 WHERE id = 1;
+
+-- Step 2
+UPDATE accounts SET balance = balance + 1000 WHERE id = 2;
+
+-- If both steps OK:
+COMMIT;
+
+-- If error occurs:
+ROLLBACK;
+
+
+example:2
+
+
+START TRANSACTION;
+
+INSERT INTO orders (user_id, total_amount) VALUES (1, 500);
+
+UPDATE products SET stock = stock - 1 WHERE product_id = 10;
+
+INSERT INTO order_items (order_id, product_id, qty) VALUES (LAST_INSERT_ID(), 10, 1);
+
+COMMIT;
+
+
+
+==================================== >
+
+List of TCL Commands in MySQL
+
+TCL Command	What It Does
+START TRANSACTION / BEGIN	Starts a new transaction (begins tracking changes)
+COMMIT	Saves all changes made in the transaction
+ROLLBACK	Undoes all changes made in the transaction
+SAVEPOINT	Sets a point within a transaction you can roll back to
+ROLLBACK TO SAVEPOINT	Undoes changes after a certain savepoint only
+RELEASE SAVEPOINT	Deletes a named savepoint (not rollbackable anymore)
+SET AUTOCOMMIT
+
+
+
+.> No, a COMMIT and ROLLBACK cannot be executed together in the same transaction, as they serve opposite purposes:
+
+.> COMMIT: This finalizes the changes made during a transaction and makes them permanent in the database. After a COMMIT, all changes in that transaction are saved, and the transaction ends.
+
+.> ROLLBACK: This undoes all changes made during a transaction, reverting the database back to its previous state before the transaction started. It effectively cancels the entire transaction and ends it.
+
+
+note points:
+================= >
+
+
+..> If you don’t use an IF ELSE block, you must manually check for errors and decide whether to execute COMMIT or ROLLBACK. 
+
+For example:
+=================== >
+Run your commands sequentially.
+
+If an error occurs, type ROLLBACK in the query editor immediately after detecting the error.
+
+If no errors occur, type COMMIT.
+
+
+..> No, COMMIT and ROLLBACK will not execute automatically based solely on whether errors occur during a transaction. You need to explicitly issue these commands to finalize or undo the changes in the transaction.
+
+..>MySQL does not automatically detect errors and execute ROLLBACK or COMMIT. You need to handle errors manually (using an IF condition, for example) and decide whether to commit or rollback based on the success or failure of your operations.
+If there’s no explicit COMMIT or ROLLBACK, the transaction remains open.
+
+
+- start transaction;
+-- update accounts set balance=balance+10 where id=1;
+-- savepoint s1;
+-- update accounts set balancee=bala3nce+10 where id=3;
+-- commit;
+-- rollback to savepoint s1;
+-- commit;
+
+
+here in this case iam havnig error in the 2nd update , after that all changes are saved , by using the commit, 
+after the commit, iam used the rollback to savepoint s1{ here this will not work  because before this only everytinh is saved to point } so here this rollback has no affect here.
+
+First Update and Savepoint:
+
+You updated the balance (balance = balance - 10) for id=1 and created a savepoint s1. This change is not yet permanent, as it is part of the ongoing transaction.
+
+Second Update and Simulated Error:
+
+You attempted an invalid update (balancee = bala3nce + 10), which caused an error. MySQL continued processing the transaction because errors do not automatically rollback or commit a transaction.
+
+First Commit:
+
+At this point, you issued a COMMIT, which finalized all changes in the transaction up to that point, making them permanent in the database.
+
+This includes the first update (balance = balance - 10) before the error.
+
+Rollback to Savepoint s1:
+
+After committing, you rolled back to the savepoint s1. However, the rollback cannot undo changes that have already been committed.
+
+At this stage, only uncommitted changes after s1 (if any) could have been undone, but since you already committed earlier, this rollback has no effect.
+
+Second Commit:
+
+You issued another COMMIT, but since everything before and after s1 was already handled, no additional changes were finalized here.
+
+
+
+EX:
+======== >
+
+-- ( -------------------------------------------------------------------------------------);
+
+-- q1
+start transaction;
+savepoint s1;
+update accounts set balance=balance-100 where id=4;
+update accounts set balance=balance+200 where id=1;
+commit;
+
+
+-- q2
+start transaction;
+savepoint s1;
+update accounts set balance=balance-100 where id=4;
+savepoint s2;
+update accounts set balance=balance+200 where id=1;
+-- rollback to savepoint s2;
+commit;
+
+-- q3
+start transaction;
+update accounts set balance=balance+10 where id=4;
+savepoint s1;
+update accounts set balancee=bala3nce+10 where id=3;
+rollback to savepoint s1;
+commit;
+
+-- ( -------------------------------------------------------------------------------------);
+
+
