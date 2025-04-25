@@ -35,3 +35,26 @@ foreign key(customer_id) references customers(customer_id)
 
 insert into orders values(11,1000,1),(12,200,2),(13,300,3),(14,450,4),(15,500,5);
 
+
+RELATIONAL DIAGRAM BETWEENN TEH PRIMARY KEY AND FOREIGN KEY:
+
+Table: Customers
++-------------+---------+
+| CustomerID  | Name    |
++-------------+---------+
+| 1           | Alice   |
+| 2           | Bob     |
++-------------+---------+
+Primary Key: CustomerID
+
+Table: Orders
++----------+-------------+-------------+
+| OrderID  | OrderDate   | CustomerID  |
++----------+-------------+-------------+
+| 101      | 2025-04-25  | 1           |
+| 102      | 2025-04-26  | 2           |
++----------+-------------+-------------+
+Primary Key: OrderID  
+Foreign Key: CustomerID → Customers(CustomerID)
+
+
