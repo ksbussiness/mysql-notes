@@ -1,0 +1,35 @@
+
+HOW TO CHANGE THE SAFE MODE IN SQL:
+
+
+
+Option 1: Temporarily Disable Safe Update Mode
+Disable safe update mode for the current session:
+
+
+SET SQL_SAFE_UPDATES = 0;
+Run your UPDATE statement:
+
+
+update accounts set balance=balance+300 where name='dhoni';
+If necessary, re-enable safe update mode afterward:
+
+SET SQL_SAFE_UPDATES = 1;
+
+----------------------------------------------------- --------------------------------- >
+Option 2: Use a Key Column in the WHERE Clause
+If name is not a key column, consider using a column like id (or a primary key) in your WHERE clause:
+
+
+update accounts set balance=balance+300 where id = <specific_id>;
+Replace <specific_id> with the actual value of the id for the user.
+
+----------------------------------------------------- --------------------------------- >
+Option 3: Change the Safe Update Mode Setting Globally (Optional)
+Open MySQL Workbench or your preferred tool.
+
+Navigate to Preferences > SQL Editor.
+
+Uncheck the option "Safe Updates (rejects UPDATEs and DELETEs with no keys in WHERE clause)."
+
+Restart your MySQL connection for the changes to take effect.
