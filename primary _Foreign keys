@@ -72,3 +72,60 @@ Same data type and length.
 Same character set and collation for string types.
 
 Index must exist on the foreign key column (auto-created if not).
+
+
+SOME ACTION ON THE FOREIGN KEYS HERE:
+=========================================== >
+
+CREATE TABLE orders (
+    order_id INT PRIMARY KEY,
+    order_date DATE,
+    amount DECIMAL(10,2),
+    customer_id INT,
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+    ON DELETE [ACTION]
+);
+
+
+1) ON DELETE CASCADE 
+-------------------------------- >
+FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+ON DELETE CASCADE
+
+Outcome: Deleting customer with customer_id = 1 will also delete orders 101 and 102.
+
+2) ON DELETE SET NULL
+-------------------------------- >
+
+FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+ON DELETE SET NULL
+
+Outcome: Deleting customer with customer_id = 1 will set customer_id to NULL in orders 101 and 102.
+Note: The customer_id column in orders must allow NULL values.
+
+3) ON DELETE SET DEFAULT
+-------------------------------- >
+
+FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+ON DELETE SET DEFAULT
+
+Outcome: Deleting customer with customer_id = 1 will set customer_id in orders 101 and 102 to the default value specified for that column.
+Note: MySQL recognizes SET DEFAULT syntax, but both InnoDB and NDB storage engines reject table definitions containing ON DELETE SET DEFAULT clauses.
+
+4) ON DELETE RESTRICT
+-------------------------------- >
+
+FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+ON DELETE RESTRICT
+
+Outcome: Attempting to delete customer with customer_id = 1 will result in an error if orders 101 or 102 exist.
+
+5) ON DELETE NO ACTION
+-------------------------------- >
+
+FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+ON DELETE NO ACTION
+
+Outcome: Attempting to delete customer with customer_id = 1 will result in an error if orders 101 or 102 exist.
+Note: In MySQL, NO ACTION is functionally equivalent to RESTRICT.
+
