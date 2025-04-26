@@ -1,0 +1,71 @@
+
+
+troble_shooting teh issues:
+
+..> In SQL, you must use forward slashes / instead of backslashes \.
+
+--> SHOW GLOBAL VARIABLES LIKE 'local_infile';
+If it shows:
+
+Variable_name	Value
+local_infile	OFF
+then you must turn it ON.
+
+👉 Turn it ON like this:
+
+SET GLOBAL local_infile = 1;
+(You may need root user to run this.)
+
+
+
+
+NOTE: 
+Even if secure_file_priv is empty,
+still MySQL must have permission to access your Desktop files.
+👉 So make sure the file permissions allow reading.
+
+If you get NULL after inserting, possible reasons could be:
+
+Wrong path (make sure / slashes are correct, not \).
+
+File is locked or not readable by MySQL.
+
+File name is wrong (check file extensions like .pdf, .jpg).
+
+🛠 How to check exactly?
+After running:
+
+SHOW VARIABLES LIKE 'secure_file_priv';
+You should see something like:
+
+
+Variable_name	Value
+secure_file_priv	(empty)
+Then no restriction. You are free to use Desktop files.
+
+
+What is BLOB? 
+
+.> BLOB = Binary Large Object.
+.> It is how MySQL stores files (like images, PDFs, etc.) inside the database.
+.> You cannot directly see the file inside Workbench visually — you will see something like [BLOB], or a long hex value (0xFFD8...).
+
+
+
+EXAMPLE CODE HERE:
+======================= >
+
+create table ff(
+-- id int primary key,
+-- file longblob,
+-- pic longblob
+-- );
+-- show tables;
+-- desc ff;
+
+-- select * from ff;
+-- INSERT INTO ff VALUES (
+--   2,
+--   LOAD_FILE('C:/Users/Sachin/OneDrive/Desktop/mental.png'),
+--   LOAD_FILE('C:/Users/Sachin/OneDrive/Desktop/dummy-pdf.pdf')
+-- );
