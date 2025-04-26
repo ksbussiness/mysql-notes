@@ -69,3 +69,41 @@ create table ff(
 --   LOAD_FILE('C:/Users/Sachin/OneDrive/Desktop/mental.png'),
 --   LOAD_FILE('C:/Users/Sachin/OneDrive/Desktop/dummy-pdf.pdf')
 -- );
+
+
+
+
+Example full flow (easy to understand)
+✅ Upload a photo into database:
+
+INSERT INTO ff (photo)
+VALUES (LOAD_FILE('C:/uploads/myphoto.jpg'));
+
+✅ Download that photo from database:
+SELECT photo
+INTO DUMPFILE 'C:/Users/Sachin/Desktop/downloadedphoto.jpg'
+FROM ff
+WHERE id = 1;
+
+✅ Check if local_infile is ON:
+SHOW VARIABLES LIKE 'local_infile';\
+
+✅ Check allowed folder for file operations:
+SHOW VARIABLES LIKE 'secure_file_priv';
+
+✅ If file is big (>1MB), check:
+SHOW VARIABLES LIKE 'max_allowed_packet';
+(If too small, increase it.)
+
+
+
+
+
+
+Important Functions for File Uploads in MySQL
+
+Function Name	Purpose	Example
+LOAD_FILE()	Reads a file from disk and returns its binary content	LOAD_FILE('C:/uploads/sample.pdf')
+HEX()	Converts binary (BLOB) to hex string (for viewing)	SELECT HEX(photo) FROM ff;
+UNHEX()	Converts hex back to binary (for inserting)	INSERT INTO ff (photo) VALUES (UNHEX('FFD8FFE0...'));
+SELECT INTO DUMPFILE	Writes a file to disk from database BLOB	SELECT file INTO DUMPFILE 'C:/uploads/newfile.pdf' FROM ff WHERE id=1;
