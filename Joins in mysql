@@ -46,6 +46,14 @@
 
 
 # INNER JOIN BOTH THE TABLES:
+
+dia:
+[ Customers ] ∩ [ Orders ]
+(Only common part)
+
+
+
+
 -- Returns only the  matching rows from both teh tables based on the condition.
 
 -- select c.customer_id,c.customer_name,o.order_id,o.products
@@ -53,6 +61,12 @@
 -- inner join orders o on c.customer_id=o.customer_id;
 
 # LEFT JOIN/LEFT JOIN  FULL OUTER BOTH THE TABLES:
+
+dia:
+[ Customers ] ⟶ [ Orders ]
+(Full customers, matching orders if available)
+
+
 -- returns all the records from yej left table, and matched records from the right
 -- Nulls where no match in right table.
 
@@ -61,6 +75,12 @@
 -- left join orders o on c.customer_id=o.customer_id;
 
 # LEFT JOIN WITH THE EXCLUSION ON BOTH TEH TABLES:
+
+dia:
+[ Customers without Orders ]
+(Left side where right side is NULL)
+
+
 -- only gives the data from the left table exclusiviely
 
 -- select c.customer_id, c.customer_name, o.order_id,o.products
@@ -94,6 +114,12 @@
 -- insert into orders values(108,NULL,'bags');
 
 # RIGHT JOIN /RIGHT OUTER JOIN BOTH TEH TABLES;
+
+dia:
+[ Customers ] ⟵ [ Orders ]
+(Full orders, matching customers if available)
+
+
 -- Returns all records from the right table, and matched records from the left.
 -- NULLs where no match in left table.
 
@@ -102,6 +128,14 @@
 -- right join orders o on c.customer_id=o.customer_id;
 
 # RIGHT JOIN WITH THE EXCLUSION ON BOTH TEH TABLES:
+
+
+dia:
+[ Orders without Customers ]
+(Right side where left side is NULL)
+
+
+
 -- only gives the data from the right  table exclusiviely
 
 -- select c.customer_id ,c.customer_name,o.order_id,o.products
@@ -113,6 +147,11 @@
 
 
 # FULL JOIN /FULL OUTER  JOIN:
+
+dia: 
+[ Customers ] ∪ [ Orders ]
+(Everything from both sides)
+
 
 -- Not directly supported in MySQL, but can be simulated using UNION.
 -- Returns all rows from both tables, with NULLs for unmatched rows.
@@ -129,6 +168,11 @@
 
 
 # FULL JOIN WITH THE EXCLUSION FOR TEH BOTH THE TABLES:
+
+dia: 
+[ Customers without Orders ] ∪ [ Orders without Customers ]
+(Only lonely records)
+
 
 
 select c.customer_id,c.customer_name,o.order_id,o.products
