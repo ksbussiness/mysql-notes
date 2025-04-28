@@ -1,0 +1,239 @@
+OPERATORS: :
+
+LOGICAL OPERATORS:
+
+
+AND OPERATOR;
+---------------------- >
+
+.> The AND operator allows you to filter data based on multiple conditions, all of which must be true for the record to be included in the result set.
+
+.> SELECT * FROM table_name WHERE condition1 AND condition2 AND …conditionN;
+
+-- select 1 and 0; # 0
+-- select 1 and null; # null
+-- select 1 and 0; # 0
+-- select null and 0; # 0
+-- select 0 and null; # 0
+--  select 1 and 1; # 1
+
+
+
+
+OR OPERATOR:
+---------------------- >
+
+.> The OR Operator in SQL displays the records where any one condition is true, i.e. either condition1 or condition2 is True.
+
+.> SELECT * FROM table_name WHERE condition1 OR condition2 OR… conditionN;
+
+-- select 1 or 0; # 1
+-- select 1 or null; # 1
+-- select 1 or 0; # 1
+-- select null or 0; # null
+-- select 0 or null; # null
+-- select 1 or 1; # 1
+
+
+Combining AND and OR Operators in SQL :
+------------------------------------------------- >
+
+.> 
+SELECT * FROM table_name 
+WHERE condition1 AND (condition2 OR condition3);
+
+
+
+STRING OPERATORS AND FUNCTIONS
+
+
+-> SHOW warnings; 
+# to show the warig of the quires
+
+-> set @name='sachim';
+ # here we are setting o=the variables here
+
+-> select @name; 
+# sachim # retriving the variables.
+
+-> select length(@name) , char_length(@name);
+# retriving the lenght of the name varibles
+
+-> SELECT CONCAT('My', NULL, 'QL'); 
+# cancating the strings here , if null is present then we get the null has output
+
+-> select concat_ws(',','my',null ,'name','is','sachin',null);
+# here this will skip the null values , and here it will separate with the ',' .
+
+-> select elt(2,"sai","sachin","ram","manoj");
+# we get the particular value from the list of strings, 
+# syn: ELT(N,str1,str2,str3,...)
+
+n= the index , 
+if n=0 we get the  null
+
+
+--> SELECT FIELD('Bb', 'Aa', 'Bb', 'Cc', 'Dd', 'Ff');
+# HERE the field will take the fist-arguments has the {the search positon value} it will compare with the all the others values in the list if found then it will give the values
+
+SELECT FIELD(null, 'Aa', 'Bb', 'Cc', 'Dd', 'Ff');
+# IN THIS CASE WE GET THE ZERO
+
+SELECT FIELD(2, 'Aa', 'Bb', 'Cc', 'Dd', 'Ff');
+# IN THIS CASE ALSO WE GET THE 0
+
+
+--  SELECT INSERT('Quadratic', 1, 4, 'What');
+# to insert in to teh string with the specified indexes, 
+
+-- SELECT LOWER('SACHIN');
+-- SELECT upper('dog');
+-- SELECT LEFT('STRING',2);
+-- select length('sai');
+
+
+--> select ltrim('  sahin reddy');
+sachin reddy
+
+REPEAT(str,count)
+--> Returns a string consisting of the string str repeated count times. If count is less than 1, returns an empty string. Returns NULL if str or count is NULL.
+...> SELECT REPEAT('MySQL', 3);
+        -> 'MySQLMySQLMySQL'
+
+
+
+REPLACE(str,from_str,to_str)
+
+--> Returns the string str with all occurrences of the string from_str replaced by the string to_str. REPLACE() performs a case-sensitive match when searching for from_str.
+
+SELECT REPLACE('www.mysql.com', 'w', 'Ww');
+        -> 'WwWwWw.mysql.com'
+
+
+
+--> REVERSE(str)
+Returns the string str with the order of the characters reversed, or NULL if str is NULL.
+SELECT REVERSE('abc');
+        -> 'cba'
+
+
+
+--> RIGHT(str,len)
+Returns the rightmost len characters from the string str, or NULL if any argument is NULL.
+ SELECT RIGHT('foobarbar', 4);
+        -> 'rbar'
+
+
+--> RTRIM(str)
+Returns the string str with trailing space characters removed.
+
+mysql> SELECT RTRIM('barbar   ');
+        -> 'barbar'
+
+
+
+-- select substring('sachin',4); # from 4 o last
+
+select substring('sachin',-1); # neg indicates from the last 
+
+
+
+STRCMP(expr1,expr2)
+
+STRCMP() returns 0 if the strings are the same, -1 if the first argument is smaller than the second according to the current sort order, and NULL if either argument is NULL. It returns 1 otherwise.
+
+
+mysql> SELECT STRCMP('text', 'text2');
+        -> -1
+mysql> SELECT STRCMP('text2', 'text');
+        -> 1
+mysql> SELECT STRCMP('text', 'text');
+
+
+
+
+
+
+
+
+LIKE OPERATOR:
+
+...> The SQL LIKE operator is used for performing pattern-based searches in a database. It is used in combination with the WHERE clause to filter records based on specified patterns, making it essential for any database-driven application that requires flexible search functionality.
+
+
+...> LIKE operator is case-insensitive by default in most database systems. This means that if you search for “apple” using the LIKE operator, it will return results that include “Apple”, “APPLE”, “aPpLe”, and so on.
+
+CONVERTING THE LIKE keyword in to the case sensitive:
+------------------------------------------------------------ >
+
+--> You can use the “BINARY” keyword in MySQL or the “COLLATE” keyword in other database systems. 
+
+For example:
+SELECT * FROM products WHERE name LIKE BINARY 'apple%'
+
+
+
+STRCMP(expr1,expr2)
+
+STRCMP() returns 0 if the strings are the same, -1 if the first argument is smaller than the second according to the current sort order, and NULL if either argument is NULL. It returns 1 otherwise.
+
+
+mysql> SELECT STRCMP('text', 'text2');
+        -> -1
+mysql> SELECT STRCMP('text2', 'text');
+        -> 1
+mysql> SELECT STRCMP('text', 'text');
+
+
+% (Percent): Represents zero or more characters.
+_ (Underscore): Represents a single character.
+[] (Square Brackets): Represents any single character within brackets.
+– (Hyphen): Specify a range of characters inside brackets.
+Examples of Wildcards
+The below table shows some examples on how wild card can be written and what do they mean:
+
+Pattern	Meaning
+‘a%’	Match strings that start with ‘a’
+‘%a’	Match strings with end with ‘a’
+‘a%t’	Match strings that contain the start with ‘a’ and end with ‘t’.
+‘%wow%’	Match strings that contain the substring ‘wow’ in them at any position.
+‘_wow%’	Match strings that contain the substring ‘wow’ in them at the second position.
+‘_a%’	Match strings that contain ‘a’ at the second position.
+‘a_ _%’	Match strings that start with ‘a and contain at least 2 more characters.
+
+
+
+
+IN OPERATPR IN MYSQL;
+------------------------------ >
+
+
+...> The SQL IN operator filters data based on a list of specific values. 
+
+...> In general, we can only use one condition in the Where clause, but the IN operator allows us to specify multiple values.
+
+...> The IN Operator in SQL is used to specify multiple values/sub-queries in the WHERE clause. It provides an easy way to handle multiple OR conditions.
+
+WHEN TO USE THE IN OPERATOR:
+------------------------------------ >
+We only pass a single condition in the WHERE clause, however there might be situations where we need to select data based on multiple conditions. For such cases, the IN operator is used.
+
+
+SYNTAX:
+SELECT column_name FROM table_name
+WHERE condition IN (condition_value1, condition_value2 …..);
+
+
+EX:
+SELECT Fname, Lname FROM employee
+WHERE Address IN ('Delhi','Himachal');
+
+
+We can use the SQL IN with the NOT operator to exclude specified data from our result.
+
+Query:
+SELECT Fname FROM employee
+WHERE Address NOT IN ('Delhi', 'Lucknow');
+
+
+NOTE : The IN operator does not support pattern matching like LIKE. Instead, you should use multiple LIKE conditions combined with OR.
