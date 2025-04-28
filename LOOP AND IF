@@ -1,0 +1,122 @@
+CONTROL STATMENT IN MYSQL;
+
+
+
+case () :
+================ >
+
+...> MySQL CASE function is a conditional statement that returns a value when the first condition is met.
+
+...> Once a condition is met, the CASE function does not check for other conditions. If no condition is met it returns the output in ELSE part.
+
+
+
+CONDIONS TO BE NOTED IN TEH CASE STATAMENT:
+-------------------------------------------------- >
+
+.> This function returns the statement in the else part if none of the stated conditions are true.
+.> This function returns NULL if none of the stated conditions are true and there is no ELSE part.
+.> This function comes under Advanced Functions.
+.> This function accepts two parameters namely conditions and results.
+
+SYNTAX:
+============= >
+
+CASE
+    WHEN condition1 THEN result1
+    WHEN condition2 THEN result2
+    WHEN conditionN THEN resultN
+    ELSE result
+END;
+
+
+It returns a value by passing over conditions whenever any condition satisfies the given statement otherwise it returns the statement in an else part. And if none of the conditions are satisfied as well as there is no else part then it returns NULL
+
+
+LOOPS:
+============= >
+
+.> loops are used to repeatedly execute a block of code or a set of statements until a specified condition is satisfied.
+
+
+IF ():
+========= >
+
+SYNTAX:
+IF(condition,output_if_true,output_if_false)
+
+ex:
+
+1) SELECT * ,IF(UnitPrice<=250,"non-taxable","taxable") as gst from orders
+
+2) SELECT *,
+       CASE
+         WHEN UnitPrice >= 2000 THEN 'Taxable'
+         ELSE 'Non-Taxable'
+       END AS gst
+FROM orders;
+
+
+NULLIF() :
+============== >
+
+..> The NULLIF() function is used to evaluate two expressions. The function returns NULL if the two expressions are equal. The function returns the first expression if the expressions are not equal.
+
+NULLIF(expression1, expression2)
+
+SELECT name, NULLIF(Salary, 0) as salary
+FROM users;
+
+
+COALESCE():
+============= >
+
+...> In MySQL, the COALESCE() function returns the first non-null value in a collection of expressions. I
+
+...> It accepts two or more inputs and returns the first non-null value. 
+
+...> It yields null if all of the arguments are null.
+
+note :
+..> The function is frequently used in MySQL queries to provide default values for nulls or to manage missing data.
+
+
+syntax:
+COALESCE(expression1, expression2, ..., expression_n)
+
+ex: SELECT COALESCE(NULL, NULL, 'Scalar');
+
+..> The output of this query will be Scalar as this is the first non null value. COALESCE() can be used in a variety of other MySQL queries. It is a useful function that can help you work more efficiently with null data and simplify complex searches.
+
+
+
+
+
+COALESCE
+
+
+COALESCE
+
+
+
+
+
+
+     
+
+
+
+
+
+
+
+sub qureis:
+
+note :
+
+select(null); # RETUERNS NULL
+SELECT(0); # RETUERNS 0
+SELECT(1); # RETUERNS 1
+SELECT("SCHIN"); # RETUERNS SCHIN
+SELECT (FALSE); # RETURNS 0
+SELECT(TRUE); # RETUERNS 1
