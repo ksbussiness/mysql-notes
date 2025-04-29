@@ -1,0 +1,234 @@
+Constarinst In MySQL :
+
+
+DEF:
+...> The MySQL constraints can be used to set certain rules to the column(s) in a table. 
+...> These constraints can restrict the type of data that can be inserted or updated in a particular column. 
+...> This helps you to maintain the data accuracy and reliability in a table.
+
+
+There are two types of MySQL constraints.
+
+i) Column level constraints: These type of constraints will only apply to a column in a table.
+ii) Table level constraints: These constraints will apply to the complete table.
+
+
+note: The commonly used constraints in MySQL are NOT NULL, UNIQUE, PRIMARY KEY, FOREIGN KEY, CHECK, DEFAULT, CREATE INDEX, AUTO_INCREMENT, etc.
+
+
+Syntax
+Following is the basic syntax to add a constraint for the column(s) in a table −
+
+create table table_name(
+
+	column_name1 datatype constraint,
+
+	column_name2 datatype constraint,
+
+	.............
+);
+
+
+
+
+The basic contraints in the mysql is :
+========================================== >
+
+
+NOT NULL: Ensures that a column cannot have a NULL value.
+
+UNIQUE: Ensures that all values in a column are different.
+
+PRIMARY KEY: A combination of NOT NULL and UNIQUE, uniquely identifying each row in a table.
+
+FOREIGN KEY: Prevents actions that would destroy links between tables.
+
+CHECK: Ensures that the values in a column satisfy a specific condition.
+
+DEFAULT: Sets a default value for a column if no value is specified.
+
+CREATE INDEX: Used to create and retrieve data from the database efficiently.
+
+...> You can define constraints when creating a table using the CREATE TABLE statement or modify them later using ALTER TABLE.
+ 
+...> If you're looking for constraints applied to existing tables, you can query the information_schema.table_constraints table.
+
+
+
+
+
+
+
+
+
+
+1) MySQL NOT NULL Constraint
+
+..> By default, a column in a MySQL table can contain NULL values. In some scenarios, we may want a particular column to not accept or contain NULL values. To do so, we can use the MySQL NOT NULL constraint.
+
+..> if we kept this constraint then it will not accept the null values at the time of the  insertion of the data into it.
+
+ex :
+As a result, the ID and NAME columns will not accept NULL values at the time of record insertion.
+
+CREATE TABLE CUSTOMERS (
+   ID int NOT NULL,
+   NAME varchar(20) NOT NULL,
+   AGE int
+);
+
+
+2) MySQL UNIQUE Constraint
+
+...> The UNIQUE constraint in MySQL ensures that every value in a column must be distinct. This means the column with the UNIQUE constraint cannot have the same value repeated; each value must be unique.
+
+
+Note: We can have one or more UNIQUE constraints on a single table.
+
+CREATE TABLE CUSTOMERS (
+   ID int NOT NULL,
+   NAME varchar(20) NOT NULL,
+   AGE int,
+   UNIQUE (ID)
+ );
+
+OR ELSE:
+
+CREATE TABLE CUSTOMERS (
+   ID int NOT NULL UNIQUE (ID),
+   NAME varchar(20) NOT NULL,
+   AGE int
+ );
+
+
+3) MySQL CHECK Constraint :
+
+
+The CHECK constraint in MySQL restricts the range of values that can be inserted into a column. 
+This constraint ensures that the inserted value in a column must be satisfied with the provided condition.
+
+..> this constraint will check for a condition , before any data is inserted in to the table.
+
+
+EX:
+CREATE TABLE CUSTOMERS (
+   ID int NOT NULL,
+   NAME varchar(20) NOT NULL,
+   AGE int,
+   CHECK (AGE >= 18)
+ );
+
+OR
+
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL,
+   NAME VARCHAR(20) NOT NULL,
+   AGE INT CHECK (AGE >= 18)
+);
+
+
+MULTIPLE COLUMNS CHECK CONSTRAINT :
+
+CREATE TABLE CUSTOMERS (
+   ID int NOT NULL,
+   NAME varchar(20) NOT NULL,
+   AGE int,
+   ADDRESS varchar(40),
+   CONSTRAINT CHECK_AGE CHECK (AGE >= 18 AND ADDRESS = "Mumbai")
+);
+
+
+4) MySQL DEFAULT Constraint ;
+
+..> The DEFAULT constraint in MySQL is used to assign a default value to a specific column in a table. 
+..> This default value gets applied to any new records in the DEFAULT specified column when no other value is provided during insertion.
+
+
+In the following query, we are defining the DEFAULT constraint on the ADDRESS column of the CUSTOMERS table. We assigned "Mumbai" as default value when no value is inserted. −
+
+
+EX:
+CREATE TABLE CUSTOMERS (
+   ID int NOT NULL,
+   NAME varchar(20) NOT NULL,
+   AGE int,
+   ADDRESS varchar(40) DEFAULT "Mumbai"
+);
+
+
+5) MySQL CREATE INDEX Constraint ;
+
+...> The CREATE INDEX constraint in MySQL is used to create indexes for one more columns in a table.
+
+...> The indexes are used to fetch the data from the database much quicker. However, the users cannot see the indexes in action, instead, they are just used to speed up the searches and queries.
+
+
+NOTE:
+
+=> THIS IS USED TO CREATE THE INDEX AFTER TEH TABLE IS CRETAED.
+
+EX:
+
+CREATE TABLE CUSTOMERS (
+   ID int NOT NULL,
+   NAME varchar(20) NOT NULL,
+   AGE int,
+   ADDRESS varchar(40),
+   PRIMARY KEY (ID)
+);
+
+
+The following query creates an index named "index_address" on the ADDRESS column of the CUSTOMERS table −
+
+CREATE INDEX <INDEX_NAME> ON <TABLE_NAM> (<COLUMN_NAMES1>,<COLUMN_NAMES2>);
+
+
+
+6) MySQL AUTO_INCREMENT Constraint :
+
+...> When a AUTO_INCREMENT constraint is defined on a particular column of a table, it will automatically generate a unique number when a new record is inserted into that column.
+
+By default, the starting value is 1, and it will automatically increment its value by 1 for each new record.
+
+
+EX:
+CREATE TABLE CUSTOMERS (
+   ID int NOT NULL AUTO_INCREMENT,
+   NAME varchar(20) NOT NULL,
+   AGE int,
+   PRIMARY KEY (ID)
+);
+
+
+7) PRIMARY KEY CONSTRAINT :
+
+NO NULL VALUES , NO DUPICATE VALUES
+
+8) FOREIGN KEY CONSTARINT :
+
+..> The FOREIGN KEY constraint in MySQL is used to link a field or collection of fields in one table to the primary key of another table.
+
+..> A table with the foreign key is called a child table and the table with the primary key is called the parent table or referenced table.
+
+
+
+Example :
+
+The following query creates a FOREIGN KEY on the CUST_ID column when the ORDERS table is created −
+
+Table: Customers
+CREATE TABLE CUSTOMERS (
+   CUST_ID int NOT NULL,
+   NAME varchar(20) NOT NULL,
+   AGE int,
+   PRIMARY KEY (CUST_ID)
+);
+
+Table: Orders 
+CREATE TABLE ORDERS (
+   ORDER_ID int NOT NULL,
+   ORDER_NUMBER int NOT NULL,
+   CUST_ID int,
+   FOREIGN KEY (CUST_ID) REFERENCES CUSTOMERS (CUST_ID)
+);
+
