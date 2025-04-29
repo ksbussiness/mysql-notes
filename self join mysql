@@ -1,0 +1,306 @@
+SELF JOIN IN MYSQL:
+
+
+..> A self join is a regular join, but the table is joined with itself.
+
+..> The MySQL Self Join is used to join a table to itself.
+
+..> To carry this out, at least one table is temporarily renamed in the MySQL statement.
+
+NOTE:
+============= >
+
+..> Self Join is a type of inner join, which performed in cases where the comparison between two columns of a same table is required.
+
+..> In other words, a table is joined with itself when it contains both Foreign Key and Primary Key in it.
+
+..> we use WHERE clause to specify the condition for the table to combine with itself; instead of the ON clause.
+
+..> To perform SELF JOIN Alias names are used with the Join condition based on the columns that define the relationship.
+
+NOTE POINT:
+=============== >
+
+A self join isn't limited to an INNER JOIN—you can also use LEFT JOIN and RIGHT JOIN depending on what you're trying to achieve.
+
+
+SYNTAX:
+========= >
+
+SELECT column_name(s)
+FROM table1 a, table1 b
+WHERE a.common_field = b.common_field;
+
+
+EXAMPLE EXPLNATIONS: 
+===================== >
+
+CREATE TABLE employees (
+    employee_id INT PRIMARY KEY,
+    employee_name VARCHAR(50),
+    manager_id INT,
+    FOREIGN KEY (manager_id) REFERENCES employees(employee_id)
+);
+
+INSERT INTO employees VALUES (1, 'John', NULL);
+INSERT INTO employees VALUES (2, 'Jane', 1);
+INSERT INTO employees VALUES (3, 'Bob', 2);
+INSERT INTO employees VALUES (4, 'Alice', 1);
+INSERT INTO employees VALUES (5, 'Charlie', 3);
+
+select * from employees;
+
+employee_id    employee_name   manager_id
+
+1	            John	NULL
+2	            Jane	1
+3	 	    Bob		2
+4		    Alice	1
+5		   Charlie	3
+
+
+THE SELF JOIN QUERY:
+-------------------------- >
+
+SELECT e1.employee_id, e1.employee_name, e2.employee_name as manager_name
+from employees as e1
+inner join
+employees as e2 on
+e2.employee_id=e1.manager_id;
+
+RESULT :
+-------------- >
+employee_id    employee_name   manager_id
+
+2	            Jane	JHON
+3	 	    Bob		JANE
+4		    Alice	JHON
+5		   Charlie	BOB
+
+
+
+SELF JOIN, QUERIES:
+====================== >
+
+
+CREATE TABLE Employees (
+    EmployeeID INT PRIMARY KEY,
+    Name VARCHAR(50),
+    Department VARCHAR(50),
+    ManagerID INT,
+    Salary DECIMAL(10,2),
+    JoiningDate DATE
+);
+
+
+INSERT INTO Employees (EmployeeID, Name, Department, ManagerID, Salary, JoiningDate) VALUES
+(1, 'Alice', 'HR', NULL, 60000, '2020-01-15'),
+(2, 'Bob', 'Finance', 1, 55000, '2021-03-20'),
+(3, 'Charlie', 'IT', 1, 65000, '2019-05-22'),
+(4, 'David', 'IT', 3, 50000, '2022-07-10'),
+(5, 'Emma', 'HR', 1, 62000, '2021-06-30'),
+(6, 'Frank', 'Finance', 2, 53000, '2023-02-12');
+
+
+
+
+select * from Employees:
+
+output:
+============ >
+
+m table
+EmploID name  depat    manGerid   salary         JoiningDate
+1	Alice	HR	null	60000.00	2020-01-15
+2	Bob	Finance	1	55000.00	2021-03-20
+3	Charlie	IT	1	65000.00	2019-05-22
+4	David	IT	3	50000.00	2022-07-10
+5	Emma	HR	1	62000.00	2021-06-30
+6	Frank	Finance	2	53000.00	2023-02-12
+
+n table
+EmploID name  depat    manGerid   salary         JoiningDate
+1	Alice	HR	null	60000.00	2020-01-15
+2	Bob	Finance	1	55000.00	2021-03-20
+3	Charlie	IT	1	65000.00	2019-05-22
+4	David	IT	3	50000.00	2022-07-10
+5	Emma	HR	1	62000.00	2021-06-30
+6	Frank	Finance	2	53000.00	2023-02-12
+
+
+
+
+
+SELECT m.EmployeeID,m.Name,m.Department, n.Name as manager_name
+FROM employees as m
+inner join employees as n
+on n.EmployeeID=m.ManagerID;
+
+in this case first from n.EmployeeId is taken and it is making a match with the 
+m table manager id 
+so for first {n.employeeId 1 , we have found 3 matching managerid's
+
+2	Bob	Finance	1	55000.00	2021-03-20
+3	Charlie	IT	1	65000.00	2019-05-22
+5	Emma	HR	1	62000.00	2021-06-30
+
+next for the 2 employeeid from the n table there is only one matching id in the m table i.e is 
+
+6	Frank	Finance	2	53000.00	2023-02-12
+
+
+next for the 3 employeeid from the n table there is only one matching id in the m table i.e is 
+
+4	David	IT	3	50000.00	2022-07-10
+
+next for the 4 employeeid from the n table there is no  matching id in the m table 
+
+next for the 5 employeeid from the n table there is no  matching id in the m table
+
+next for the 6 employeeid from the n table there is no  matching id in the m table
+
+so my final output need to be:
+
+
+2	Bob	Finance	Alice
+3	Charlie	IT	Alice
+5	Emma	HR	Alice
+6	Frank	Finance	Bob
+4	David	IT      Charlie
+
+
+but iam getting here has
+
+2	Bob	Finance	Alice
+3	Charlie	IT	Alice
+4	David	IT	Charlie
+5	Emma	HR	Alice
+6	Frank	Finance	Bob
+
+
+why  BECAUSE HERE BY DEFAULT THE SQL ENGINE HERE IN THIS CASE SORTING WITH THE EMPLOYEE_ID
+
+Scan Complexity
+If using a Nested Loop Join, the scanning happens O(m × n) times (i.e., each row in m scans n).
+
+If using a Hash Join, scanning happens in O(m + n) time after pre-processing n into a hash table.
+
+If indexes exist on EmployeeID or ManagerID, scan time is reduced significantly.
+
+
+
+
+SELECT e1.EmployeeID, e1.Name AS Employee, e2.Name AS Manager
+FROM Employees e1
+LEFT JOIN Employees e2 ON e1.ManagerID = e2.EmployeeID;
+
+
+
+List all employees with their respective manager names. 1
+
+ans:
+
+SELECT m.EmployeeID,m.Name,m.Department, n.Name as manager_name
+FROM employees as m
+inner join employees as n
+on n.EmployeeID=m.ManagerID;
+
+
+
+
+1) Find employees who have the same department as their manager. ?
+
+SELECT m.EmployeeID,m.Name,m.Department,
+From employees as m
+inner join employees as n
+on n.EmployeeID=m.ManagerID and n.Department=m.Department
+
+2) Identify employees earning more than their managers. ?
+
+SELECT m.EmployeeID,m.Name,m.Department
+From employees as m
+inner join employees as n
+on n.EmployeeID=m.ManagerID and n.Department=m.Department;
+
+3) Retrieve employees who joined before their managers.
+
+SELECT m.EmployeeID,m.Name,m.Department ,m.JoiningDate as em_join_date, n.JoiningDate as man_Joining_date
+FROM employees as m
+inner join employees as n
+on n.EmployeeID=m.ManagerID and m.JoiningDate<n.JoiningDate;
+
+
+
+4) Find employees who don’t have a manager.
+
+select  * from employees where ManagerID is NULL;
+
+
+5) Show employees whose managers are in a different department.
+
+SELECT m.EmployeeID,m.Name,m.Department
+From employees as m
+inner join employees as n
+on n.EmployeeID=m.ManagerID and n.Department!=m.Department;
+
+
+
+6) Find the employee with the highest salary along with their manager.
+Identify employees who joined in the same year as their manager.
+List employees along with their manager’s salary.
+Find managers who have more than 2 employees reporting to them.
+Retrieve employees who earn less than their manager.
+Show employees and their respective manager’s joining date.
+Identify employees where both employee and manager belong to HR.
+
+14) Retrieve employees with salaries greater than 60,000 along with their manager.
+
+
+15) Find employees who have been in the company longer than their manager.
+16) Show managers who don’t have anyone reporting to them.
+
+17) Retrieve employees whose managers earn less than them.
+
+SELECT m.EmployeeID,m.Name,m.Department ,m.JoiningDate as em_join_date,m.Salary as empl_salary ,n.JoiningDate as man_Joining_date, n.Salary as man_salary
+FROM employees as m
+inner join employees as n
+on n.EmployeeID=m.ManagerID 
+WHERE (m.salary)>(n.salary);
+
+
+18) Find employees who joined in January along with their manager details.
+
+SELECT m.EmployeeID,m.Name,m.Department ,m.JoiningDate as em_join_date, n.JoiningDate as man_Joining_date
+FROM employees as m
+inner join employees as n
+on n.EmployeeID=m.ManagerID 
+WHERE month(m.JoiningDate)=01;
+
+note :here alice only joined in the january but he does not have the manger so null 
+
+notes:
+year()=2029
+month()=12
+day()=23
+date_column = '2025-04-29'; /// specifi date only
+year()=2029 and month()=11 // year and month
+
+
+19) Retrieve employees and managers where both belong to Finance department.
+
+SELECT m.EmployeeID,m.Name,m.Department ,m.JoiningDate as em_join_date, n.JoiningDate as man_Joining_date
+FROM employees as m
+inner join employees as n
+on n.EmployeeID=m.ManagerID and m.Department='Finance'and n.Department='Finance';
+
+
+
+
+
+
+Show employees who have not reported to Alice.
+
+
+
+
+
