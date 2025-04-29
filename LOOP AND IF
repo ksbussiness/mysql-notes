@@ -99,7 +99,10 @@ COALESCE
 
 
 
+NOTE:
+MySQL does not support IF as a conditional statement inside a SELECT. Instead, MySQL uses the CASE statement for such conditions.
 
+MySQL does not allow loops directly in queries, an alternative is using a recursive CTE (Common Table Expression) in newer MySQL versions.
 
 
      
