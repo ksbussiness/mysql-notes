@@ -237,3 +237,59 @@ WHERE Address NOT IN ('Delhi', 'Lucknow');
 
 
 NOTE : The IN operator does not support pattern matching like LIKE. Instead, you should use multiple LIKE conditions combined with OR.
+
+
+
+
+
+BETWEEN OPERATOR:
+====================== >
+
+
+The BETWEEN operator selects values within a given range. The values can be numbers, text, or dates.
+
+The BETWEEN operator is inclusive: begin and end values are included.
+
+NOTE :
+IN TEH BETWEEN OPERATOR IT WILL INCLUDE BOTH THE LOWER AND UPPER VALUES:
+
+
+
+NOT BETWEEN Example
+To display the VALUES  outside the range of the previous example, WE use NOT BETWEEN:
+
+
+
+TRUNCATE() :
+=============== >
+
+.> MySQL TRUNCATE() Function
+
+.> The TRUNCATE() function truncates a number to the specified number of decimal places.
+
+SYNTAX : TRUNCATE(number, decimals)
+
+
+CONVERT():
+============== >
+
+.> The CONVERT() function converts a value into the specified datatype or character set.
+
+Syntax
+CONVERT(value, type)
+
+.> The type can be DATE, DEMICAL, TIME,CHAR,NCHAR,SIGNED,UNSIGNED,BINAY.
+
+
+
+CAST():
+=============== >
+
+Definition and Usage
+The CAST() function converts a value (of any type) into the specified datatype.
+
+Syntax
+CAST(value AS datatype)
+
+EX: SELECT CAST(150 AS CHAR);
+
