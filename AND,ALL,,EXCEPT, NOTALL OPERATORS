@@ -1,0 +1,111 @@
+
+
+'ANY' AND 'ALL' OPERATORS:
+============================= >
+scenarios:
+--------------- >
+
+.> When working with databases, there are often scenarios where we need to compare a value against multiple other values. 
+
+.> The ANY and ALL operators are used in conjunction with subqueries to compare a single value to a set of values.
+
+..> The ANY and ALL operators allow you to perform a comparison between a single column value and a range of other values.
+
+
+ANY OPERATOR:
+
+..> The ANY operator returns TRUE if the comparison is TRUE for at least one value in the set,
+
+ALL OPERATOR:
+
+..> while the ALL operator returns TRUE only if the comparison is TRUE for all values in the set.
+
+
+
+
+1) find employees whose salary is greater than the salary of any employee in the 'HR' department.?
+
+select name, Salary from employees where Salary > ANY(
+select salary from employees where Department='HR');
+
+OP:
+Charlie	65000.00
+Emma	62000.00
+
+
+SYNTAX FOR THE ALL OPERATOR :
+================================== >
+SELECT column_name
+FROM table_name
+WHERE column_name comparison_operator ALL (subquery);
+
+
+2) find employees whose salary is greater than the salary of aLL employee in the 'HR' department.?
+
+select name, Salary from employees where Salary > ALL(
+select salary from employees where Department='HR');
+
+OP:
+Charlie	65000.00
+
+
+NOT EQUAL OPERATOR:
+===================== >
+
+......> It is used to exclude the fields from Result Sets.
+
+In MySQL, there are two ways to express the NOT EQUAL operator:
+
+Using the != operator
+Using the <> operator
+
+
+ex:
+
+Select * from employees where Department <> 'HR' AND Department <> 'IT';
+SELECT * FROM employees where Department !='Finance';
+
+
+
+EXCEPT OPERATOR :
+======================= >
+
+..> The EXCEPT operator in SQL compares the two result sets returned and returns only the rows that are found in one but not the other.
+
+..> MySQL, one of the most popular relational database management systems, does not support the EXCEPT operator directly. 
+
+..> But it provides alternative ways to get the same results from MySQL, such as using LEFT JOIN or NOT IN.
+
+
+ex:
+SELECT a.*
+FROM table1 a
+LEFT JOIN table2 b ON a.id = b.id
+WHERE b.id IS NULL;
+
+SELECT *
+FROM table1
+WHERE id NOT IN (SELECT id FROM table2);
+
+
+sub qureis:
+
+note :
+
+select(null); # RETUERNS NULL
+SELECT(0); # RETUERNS 0
+SELECT(1); # RETUERNS 1
+SELECT("SCHIN"); # RETUERNS SCHIN
+SELECT (FALSE); # RETURNS 0
+SELECT(TRUE); # RETUERNS 1
+
+
+
+SUB QUIRES :
+
+...> A subquery is embedded inside another query and acts as input or output for that query. Subqueries are also called inner queries 
+...> Subqueries help in executing queries with dependency on the output of another query. 
+...> Subqueries are enclosed in parentheses. 
+
+MYSQL subquery is executed first before the execution of the outer query.
+...> It can be used with SELECT, FROM, and WHERE clauses. 
