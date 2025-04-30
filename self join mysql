@@ -246,18 +246,74 @@ on n.EmployeeID=m.ManagerID and n.Department!=m.Department;
 
 
 6) Find the employee with the highest salary along with their manager.
-Identify employees who joined in the same year as their manager.
-List employees along with their manager’s salary.
-Find managers who have more than 2 employees reporting to them.
-Retrieve employees who earn less than their manager.
-Show employees and their respective manager’s joining date.
-Identify employees where both employee and manager belong to HR.
 
-14) Retrieve employees with salaries greater than 60,000 along with their manager.
+SELECT m.EmployeeID,m.Name,m.Department ,m.JoiningDate as em_join_date,m.Salary as empl_salary ,n.JoiningDate as man_Joining_date, n.Salary as man_salary
+ FROM employees as m
+inner join employees as n
+on n.EmployeeID=m.ManagerID
+where m.salary=(select max(Salary) from employees);
+
+7) Identify employees who joined in the same year as their manager.
+
+select m.EmployeeID,m.Name,m.Department,m.JoiningDate as em_join_date, n.JoiningDate as man_joining_date
+FROM employees as m
+inner join employees as n
+on n.EmployeeID=m.ManagerID
+where date(n.JoiningDate)=date(m.JoiningDate);
+
+condition is not matched here so NULL
+
+
+
+
+
+8) List employees along with their manager’s salary.
+
+SELECT m.EmployeeID,m.Name,m.Department ,m.JoiningDate as em_join_date,m.Salary as empl_salary ,n.JoiningDate as man_Joining_date, n.Salary as man_salary
+FROM employees as m
+inner join employees as n
+on n.EmployeeID=m.ManagerID;
+
+
+
+
+
+10) Retrieve employees who earn less than their manager.
+
+SELECT m.EmployeeID,m.Name,m.Department ,m.JoiningDate as em_join_date,m.Salary as empl_salary ,n.JoiningDate as man_Joining_date, n.Salary as man_salary
+FROM employees as m
+inner join employees as n
+on n.EmployeeID=m.ManagerID
+WHERE n.Salary>M.Salary;
+
+
+
+11) Show employees and their respective manager’s joining date.
+SELECT m.EmployeeID,m.Name,m.Department ,m.JoiningDate as em_join_date ,n.JoiningDate as man_Joining_date
+FROM employees as m
+inner join employees as n
+on n.EmployeeID=m.ManagerID;
+
+12) Identify employees where both employee and manager belong to HR.
+
+
+SELECT m.EmployeeID,m.Name,m.Department ,m.JoiningDate as em_join_date ,n.JoiningDate as man_Joining_date
+FROM employees as m
+inner join employees as n
+on n.EmployeeID=m.ManagerID
+where n.Department='HR' and m.Department='HR';
+
+
 
 
 15) Find employees who have been in the company longer than their manager.
-16) Show managers who don’t have anyone reporting to them.
+
+select m.EmployeeID,m.Name,m.Department,m.JoiningDate as em_join_date, n.JoiningDate as man_joining_date
+FROM employees as m
+inner join employees as n
+on n.EmployeeID=m.ManagerID
+where n.JoiningDate>m.JoiningDate;
+
 
 17) Retrieve employees whose managers earn less than them.
 
@@ -297,10 +353,7 @@ on n.EmployeeID=m.ManagerID and m.Department='Finance'and n.Department='Finance'
 
 
 
-
-Show employees who have not reported to Alice.
-
-
-
-
-
+14) Retrieve employees with salaries greater than 60,000 along with their manager.
+9) Find managers who have more than 2 employees reporting to them.
+16) Show managers who don’t have anyone reporting to them.
+20) Show employees who have not reported to Alice.
