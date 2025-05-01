@@ -1,0 +1,286 @@
+resouces:
+https://shreybanugaria.medium.com/getting-better-at-sql-sql-interview-preparation-f724b08b62db
+
+
+CREATE TABLE employee_data (
+    employee_id INT PRIMARY KEY AUTO_INCREMENT,
+    department VARCHAR(50) NOT NULL,
+    salary DECIMAL(10, 2) NOT NULL,
+    hire_date DATE NOT NULL,
+    performance_score INT,
+    city VARCHAR(50)
+);
+
+
+INSERT INTO employee_data (department, salary, hire_date, performance_score, city) VALUES
+('Sales', 60000.00, '2023-01-15', 85, 'Ahmedabad'),
+('Marketing', 55000.00, '2022-11-20', 92, 'Mumbai'),
+('Sales', 75000.00, '2023-05-10', 78, 'Ahmedabad'),
+('Finance', 80000.00, '2024-02-01', 95, 'Delhi'),
+('Marketing', 62000.00, '2024-03-15', 88, 'Mumbai'),
+('Sales', 68000.00, '2023-09-01', 82, 'Bangalore'),
+('Finance', 90000.00, '2023-07-01', 91, 'Delhi'),
+('HR', 58000.00, '2024-01-10', 86, 'Bangalore'),
+('Sales', 72000.00, '2022-12-01', 90, 'Ahmedabad'),
+('Marketing', 59000.00, '2023-10-01', 87, 'Mumbai');
+
+
+
+
+
+
+1. Row Number within each Department:
+
+
+SELECT
+    employee_id,
+    department,
+    salary,
+    ROW_NUMBER() OVER (PARTITION BY department ORDER BY salary DESC) as rn
+FROM employee_data;
+This query assigns a unique rank to each employee within their department based on their salary in descending order.
+
+2. Rank of Employees by Salary across the Entire Company:
+
+SELECT
+    employee_id,
+    department,
+    salary,
+    RANK() OVER (ORDER BY salary DESC) as salary_rank
+FROM employee_data;
+This query assigns a rank to each employee based on their salary across the entire company. Employees with the same salary will have the same rank, and the next rank will be skipped.
+
+3. Dense Rank of Employees by Performance Score within each City:
+
+
+SELECT
+    employee_id,
+    city,
+    performance_score,
+    DENSE_RANK() OVER (PARTITION BY city ORDER BY performance_score DESC) as performance_dense_rank
+FROM employee_data;
+This query assigns a rank to each employee within their city based on their performance score in descending order. Unlike RANK(), DENSE_RANK() does not skip ranks.
+
+4. Total Salary for each Department:
+
+
+SELECT
+    employee_id,
+    department,
+    salary,
+    SUM(salary) OVER (PARTITION BY department) as total_department_salary
+FROM employee_data;
+This query calculates the total salary for each department and displays it alongside each employee in that department.
+
+5. Average Salary for all Employees:
+
+
+SELECT
+    employee_id,
+    department,
+    salary,
+    AVG(salary) OVER () as overall_average_salary
+FROM employee_data;
+This query calculates the average salary of all employees in the company and displays it for each employee. The empty OVER() clause indicates that the window function applies to the entire result set.
+
+6. Lag of Hire Date within each Department:
+
+
+SELECT
+    employee_id,
+    department,
+    hire_date,
+    LAG(hire_date, 1, '1900-01-01') OVER (PARTITION BY department ORDER BY hire_date) as previous_hire_date
+FROM employee_data;
+This query retrieves the hire date of the previous employee hired in the same department, ordered by hire date. LAG(hire_date, 1, '1900-01-01') retrieves the value of hire_date from the row before the current row within the partition. If there is no preceding row, it returns '1900-01-01'.
+
+7. Lead of Performance Score within each City:
+
+
+SELECT
+    employee_id,
+    city,
+    performance_score,
+    LEAD(performance_score, 1) OVER (PARTITION BY city ORDER BY performance_score DESC) as next_performance_score
+FROM employee_data;
+This query retrieves the performance score of the next employee with a lower or equal performance score in the same city. LEAD(performance_score, 1) retrieves the value of performance_score from the row after the current row within the partition.
+
+8. First Salary in each Department:
+
+
+SELECT
+    employee_id,
+    department,
+    salary,
+    FIRST_VALUE(salary) OVER (PARTITION BY department ORDER BY hire_date) as first_department_salary
+FROM employee_data;
+This query retrieves the salary of the first employee hired in each department.
+
+9. Last Performance Score in each City:
+
+SELECT
+    employee_id,
+    city,
+    performance_score,
+    LAST_VALUE(performance_score) OVER (PARTITION BY city ORDER BY hire_date RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) as last_city_performance
+FROM employee_data;
+This query retrieves the performance score of the last employee hired in each city. Note the use of RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING to ensure that LAST_VALUE() considers all rows in the partition.
+
+10. Ntile to divide employees into 4 quartiles based on salary:
+
+SELECT
+    employee_id,
+    salary,
+    NTILE(4) OVER (ORDER BY salary DESC) as salary_quartile
+FROM employee_data;
+
+
+
+11. Cumulative Sum of Salary within each Department:
+
+SELECT
+    employee_id,
+    department,
+    salary,
+    SUM(salary) OVER (PARTITION BY department ORDER BY hire_date) as cumulative_department_salary
+FROM employee_data;
+This query calculates the running total of salaries within each department, ordered by the hire date.
+
+12. Cumulative Average of Salary within each Department:
+
+SELECT
+    employee_id,
+    department,
+    salary,
+    AVG(salary) OVER (PARTITION BY department ORDER BY hire_date) as cumulative_avg_department_salary
+FROM employee_data;
+This query calculates the running average of salaries within each department, ordered by the hire date.
+
+13. Maximum Salary within each City:
+
+SELECT
+    employee_id,
+    city,
+    salary,
+    MAX(salary) OVER (PARTITION BY city) as max_city_salary
+FROM employee_data;
+This query finds the highest salary in each city and displays it alongside each employee in that city.
+
+14. Minimum Performance Score within each Department:
+
+
+SELECT
+    employee_id,
+    department,
+    performance_score,
+    MIN(performance_score) OVER (PARTITION BY department) as min_department_score
+FROM employee_data;
+This query finds the lowest performance score in each department and displays it alongside each employee in that department.
+
+15. Row Number for the Entire Table:
+
+SELECT
+    employee_id,
+    department,
+    ROW_NUMBER() OVER () as overall_row_number
+FROM employee_data;
+This query assigns a sequential row number to each row in the entire result set, without any partitioning.
+
+16. Rank based on Hire Date (earliest to latest):
+
+SELECT
+    employee_id,
+    hire_date,
+    RANK() OVER (ORDER BY hire_date ASC) as hire_date_rank
+FROM employee_data;
+This query ranks employees based on their hire date, with the earliest hire date receiving the rank of 1.
+
+17. Dense Rank based on Salary within each City (ascending):
+
+SELECT
+    employee_id,
+    city,
+    salary,
+    DENSE_RANK() OVER (PARTITION BY city ORDER BY salary ASC) as salary_dense_rank_asc
+FROM employee_data;
+This query assigns a dense rank to employees within each city based on their salary in ascending order.
+
+18. Percent Rank of Salary across the Entire Company:
+
+SELECT
+    employee_id,
+    salary,
+    PERCENT_RANK() OVER (ORDER BY salary DESC) as salary_percent_rank
+FROM employee_data;
+This query calculates the percentile rank of each employee's salary compared to all other employees. The result is between 0 and 1.
+
+19. Cume Dist of Salary across the Entire Company:
+
+SELECT
+    employee_id,
+    salary,
+    CUME_DIST() OVER (ORDER BY salary DESC) as salary_cume_dist
+FROM employee_data;
+This query calculates the cumulative distribution of each employee's salary compared to all other employees. It shows the proportion of employees with a salary less than or equal to the current employee's salary.
+
+20. Nth Value (e.g., 2nd highest salary) within each Department:
+
+SELECT
+    employee_id,
+    department,
+    salary,
+    NTH_VALUE(salary, 2) OVER (PARTITION BY department ORDER BY salary DESC RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) as second_highest_department_salary
+FROM employee_data;
+This query retrieves the second highest salary within each department. The RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING is crucial here to consider all rows in the partition for determining the nth value.
+
+21. Ratio to Report Total Salary for each Department:
+
+SELECT
+    employee_id,
+    department,
+    salary,
+    salary / SUM(salary) OVER (PARTITION BY department) as salary_to_department_total_ratio
+FROM employee_data;
+
+
+========================================================= >
+
+List of all the window funtions in mysql:
+
+
+Category             | Window Function        | Description
+---------------------|------------------------|------------------------------------------------------------------------------------------------------------------------------------------
+Ranking Functions    | ROW_NUMBER()           | Assigns a unique sequential integer to each row within a partition (or the entire result set).
+                     | RANK()                 | Assigns a rank to each row within a partition based on the order of values. Rows with equal values receive the same rank, with gaps.
+                     | DENSE_RANK()           | Assigns a rank to each row within a partition based on the order of values. Rows with equal values receive the same rank, without gaps.
+                     | PERCENT_RANK()         | Calculates the percentile rank of the current row within its partition (0 to 1).
+                     | CUME_DIST()            | Calculates the cumulative distribution of a value within a partition (proportion <= current row's value).
+                     | NTILE(N)               | Divides the rows within a partition into N approximately equal groups and assigns a group number.
+Value Functions      | LAG(expr [,offset[,default]]) | Accesses data from a preceding row within the partition. Returns default if no preceding row.
+                     | LEAD(expr [,offset[,default]]) | Accesses data from a following row within the partition. Returns default if no following row.
+                     | FIRST_VALUE(expr)      | Returns the value of the expression from the first row within the window frame.
+                     | LAST_VALUE(expr)       | Returns the value of the expression from the last row within the window frame (frame definition is important).
+                     | NTH_VALUE(expr, N)     | Returns the value of the expression from the Nth row within the window frame.
+Aggregate Functions  | SUM(expr)              | Calculates the sum of the expression over the window frame.
+(as Window Functions)| AVG(expr)              | Calculates the average of the expression over the window frame.
+                     | MIN(expr)              | Returns the minimum value of the expression over the window frame.
+                     | MAX(expr)              | Returns the maximum value of the expression over the window frame.
+                     | COUNT(expr)            | Returns the number of non-NULL values of the expression over the window frame.
+
+List of All Window Functions:
+ROW_NUMBER()
+RANK()
+DENSE_RANK()
+PERCENT_RANK()
+CUME_DIST()
+NTILE(N)
+LAG(expr [,offset[,default]])
+LEAD(expr [,offset[,default]])
+FIRST_VALUE(expr)
+LAST_VALUE(expr)
+NTH_VALUE(expr, N)
+SUM(expr)
+AVG(expr)
+MIN(expr)
+MAX(expr)
+COUNT(expr)
