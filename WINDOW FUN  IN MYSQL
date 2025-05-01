@@ -1,0 +1,146 @@
+WINDOW FUNCTIONS IN MYSQL:
+=================================== >
+
+
+RESOURCES:
+
+1) https://github.com/ankitkrsingh05/class_imc/blob/main/sql/16july_queries_practise.sql
+
+PDF
+2) https://media.datacamp.com/legacy/image/upload/v1713890725/Marketing/Blog/SQL_Window_Functions_1_1.pdf 
+
+3) https://www.freecodecamp.org/news/window-functions-in-sql/
+
+..> Window Functions are functions that enable expensive calculations across sets of rows related to the current row.
+
+..> Unlike aggregate functions which return a single value for a group of rows, window functions returns a result for each row in the result set.
+
+..> These functions are highly useful for tasks such as ranking, calculating running totals, and finding moving averages while still retaining individual row details.
+
+..> 
+
+
+Why we need the use of the window functions:-
+--------------------------------------------------- >
+
+If you use a regular SUM() function, you might get the total sales for all products. This collapses all the individual sales rows into one summary row.
+
+Now, imagine you want to see each product's sales amount along with the total sales for all products on that same row. This is where window functions comes in. They allow you to perform the total sales calculation (the "window") without losing the individual product sales details.
+
+
+
+...> A window is defined using the OVER() clause in SQL.
+...> A window is basically a set of rows or observations in a table.
+...> In a table you may have more than one window depending on how you specify the query
+
+
+Different Types of Window Functions :-
+----------------------------------------------- >
+
+There are a lot of window functions that exist in SQL but they are primarily categorized into 3 different types:
+
+1) Aggregate window functions
+Aggregate window functions are used to perform operations on sets of rows in a window(s). They include SUM(), MAX(), COUNT(), and others.
+
+2) Value window functions
+Rank window functions are used to rank rows in a window(s). They include RANK(), DENSE_RANK(), ROW_NUMBER(), and others.
+
+3) Ranking window functions
+Value window functions are like aggregate window functions that perform multiple operations in a window, but they're different from aggregate functions. They include things like LAG(), LEAD(), FIRST_VALUE()
+
+
+POINT'S TO CONSIDER :-
+================= >
+..> OVER() specifies that the function before it is a window function not an ordinary one.
+..> So when the SQL engine sees the over clause it will know that the function before the over clause is a window function.
+..> The OVER() clause has some parameters which are optional depending on what you want to achieve.The first one being PARTITION BY.
+..> The PARTITION BY divides the result set into different partitions/windows.
+
+PARTITION BY : MAY HAVE THE :
+=>  an expression,  OR
+=> a column, or
+=>  more than one occurrence of an expression or 
+=> more themn one column's which must be separated by a comma. 
+
+...> The next parameter ORDER BY is used to sort the observations in a window.
+..> inside teh order by we can have the:
+ORDER BY MAY HAVE THE:
+=> a expression or
+=> column name 
+
+NOTE POINT :
+================ >
+.> That all rows belong to a single window, meaning that calculations (such as ranking, cumulative sums, or averages) will be applied across all rows in the dataset without segmentation.
+
+
+In simple terms, window functions are incredibly useful when you need to:
+------------------------------------------------------------------------------ >
+
+...> Calculate running totals or moving averages: See how a value accumulates over time or across categories.
+...> Rank items within groups: Determine the top-selling product in each region, or the highest-scoring student in each class.
+...> Compare a row to other rows within its group: Calculate the percentage contribution of each product's sales to the total sales for that day.
+...> Access values from preceding or succeeding rows: Compare this month's sales to last month's sales for the same product.
+
+Here's a simple analogy:
+
+EX:-
+
+Think of a classroom of students and their test scores.
+
+A regular aggregate function like AVG() would give you the average score for the entire class.
+A window function could tell you each student's score and the average score of the class next to it on the same row. It could also tell you each student's rank within the class. You get individual details alongside the group-level calculation.
+In essence, window functions let you perform calculations across a "window" of related rows while keeping the individual row details intact. 
+
+
+SYNTAX TO WRITE THE WINDOW FUNCTIONS:
+------------------------------------------ >
+
+S1:-
+function_name(column_name) OVER (
+    [ PARTITION BY partition_column(s) ]
+    [ ORDER BY order_column(s) [ASC | DESC] [NULLS {FIRST | LAST}] ]
+    [ window_frame ]
+)
+
+
+S2:-
+window_function_name([expression]) OVER (
+    [PARTITION BY expression]
+    [ORDER BY expression [ASC|DESC]]
+    [ROWS or RANGE frame_clause]
+)
+
+
+SYNTAX: EXPLNATION:-
+
+window_function_name: which is nothing but the name of your window function, check this example which can be ROW_NUMBER,.
+PARTITION BY: Result set is divided into partitions, and then the window function is applied.
+ORDER BY: This specifies the order of the rows within each partition.
+ROWS or RANGE — Defines the window of rows that should be considered for the calculation.
+
+
+function_name(column_name): This is the actual window function you want to use. Examples include:
+
+Aggregate functions: SUM(), AVG(), COUNT(), MIN(), MAX()
+Ranking functions: ROW_NUMBER(), RANK(), DENSE_RANK(), NTILE(), PERCENT_RANK(), CUME_DIST()
+Value functions: LAG(), LEAD(), FIRST_VALUE(), LAST_VALUE(), NTH_VALUE()
+column_name is the column that the function operates on (if applicable). Some functions like ROW_NUMBER() don't require a column.
+OVER (...): This clause signifies that it's a window function. The parentheses contain the window definition.
+
+PARTITION BY partition_column(s) (Optional): This divides the rows of your table into partitions (groups) based on the values in the specified column(s). The window function will be calculated separately for each partition. If you omit PARTITION BY, the entire table is treated as a single partition. Think of it like a GROUP BY clause, but without collapsing the rows.
+
+ORDER BY order_column(s) [ASC | DESC] [NULLS {FIRST | LAST}] (Optional): This specifies the order of rows within each partition (or the entire table if no PARTITION BY is used). This is crucial for functions that depend on order, like ranking functions, running totals, and LAG/LEAD.
+
+ASC specifies ascending order (default).
+DESC specifies descending order.
+NULLS FIRST or NULLS LAST determines the position of null values in the ordering.
+window_frame (Optional): This defines the set of rows within the current partition that will be used for the window function calculation. It specifies a subset of rows relative to the current row. Common window frame specifications include:
+
+ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW: Includes all rows from the beginning of the partition up to the current row1 (for running totals).   
+
+ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING: Includes all rows from the current row to the end of the partition.
+ROWS BETWEEN n PRECEDING AND CURRENT ROW: Includes the n rows before the current row and the current row.
+ROWS BETWEEN CURRENT ROW AND n FOLLOWING: Includes the current row and the next n rows.
+ROWS BETWEEN n PRECEDING AND m FOLLOWING: Includes n preceding rows, the current row, and m following rows.
+RANGE BETWEEN ... AND ...: Similar to ROWS, but based on the values in the ORDER BY column rather than physical row offsets.
+GROUPS BETWEEN ... AND ...: Specifies the window frame based on groups of rows with the same values in the ORDER BY clause.
