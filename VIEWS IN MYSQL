@@ -1,0 +1,308 @@
+VIEWS NI MYSQL:
+==================== >
+
+
+..> Views in MySQL", which act as virtual tables.
+
+..> Views in MySQL are indeed "virtual tables" that are used to view data from one or more tables. 
+
+..> Views do not have their data but rather store data virtually, consisting of rows and columns.
+
+
+
+..> When you create a view, no new table is created to store the data. Instead, a view is essentially a stored query or a virtual table.
+
+..> View: This is like a saved set of instructions (the query) that tells MySQL how to retrieve and present data from one or more underlying tables.
+
+
+What happens when you create a view:
+======================================== >
+
+1) You define a SQL query: This query specifies which columns and rows from the underlying table(s) you want to see in the view. You can also use functions, joins, and filtering in this query.
+2) MySQL stores the query definition: Instead of copying the data, MySQL simply saves the definition of the query you provided.
+3) When you query the view: MySQL executes the stored query against the underlying table(s) and presents you with the result set as if it were a real table.
+
+
+
+
+********** 
+NOTE:
+..> Think of a view as a virtual table. It doesn't physically store data itself. Instead, when you query a view, the database server takes the view's definition and dynamically executes it against the underlying base tables.
+
+
+************
+NOTE:
+..> Query Redirection: Yes, when you query a view, the database system rewrites your query to reference the actual tables and conditions defined in the view. 
+..> It's like a shortcut or an alias for a more complex query.
+
+
+
+
+
+NOTE:
+..> Views are very helpful in restricting access to your application's critical data to third-party users.
+
+
+
+MATERIALIZED VIEWS:-
+======================== >
+
+...> Unlike regular views, materialized views do store the results of the view's query on disk. When the base tables are updated, the materialized view might need to be refreshed (either automatically or manually) to reflect the changes.
+
+Benefits of Materialized Views:
+
+...> Performance Improvement: Querying a materialized view can be significantly faster than executing the underlying complex query against the base tables, especially for frequently accessed data or computationally intensive queries.
+
+....> Data Snapshots: Materialized views can provide a snapshot of the data at a specific point in time.
+Trade-offs of Materialized Views:
+
+...> Storage Overhead: Materialized views require storage space to hold the data.
+Maintenance Overhead: They need to be refreshed, which can consume system resources and introduce latency if not managed carefully.
+In summary:
+
+Regular views are stored queries that provide a logical, virtual representation of data from one or more tables. They simplify querying but don't inherently store data or improve query performance in the same way as indexes.
+Materialized views do store the results of a query, offering performance benefits for frequently accessed data at the cost of storage and maintenance.
+
+...> These views are not supported by mysql { but oracle, postgresSQL will supports them }
+
+
+FOR NORMAL VIEWS:-
+**********************
+NOTE POINT:
+
+...> AFTER CREATING THE VIEW, WHEN WE UPDATE THE TABLE , AND AFTER THAT WEHN WE QUERY THE VIEW  CAN WE GET THE LATEST DATA  FROM THE TABLES. YES WE GET TEH LATEST DATA ONLY.
+
+...> AFTER CREATING TEH VIEW ON A TABLE, AND AFTER THAT WHEN WE MADE AN UPDATE ON THE VIEW, WILL IT BE REFLECTED TO TEH UNDERLAYING TABLES ALSO ?
+
+...> Yes, if the view is updatable, then changes made through the view will be reflected in the underlying base table(s).
+
+...> Note that a view and table cannot have the same name so you need to drop the table first before creating a view whose name is the same as the deleted table.
+
+
+
+
+WHY VIEWS ARE USED :
+=========================== >
+
+..> Enhanced Security: Views expose only the data to the third-party apps and hide the internal details like table structure, attributes, etc, thus adding extra security.
+
+..> It also helps in limiting the access of table attributes from the end users. 
+
+..> Data Security and Access Control: 
+Views can be used to restrict access to certain columns or rows of a table. You can grant users permission to query a view that only shows the data they are authorized to see, without giving them direct access to the entire base table.
+
+..> Data Abstraction and Consistency:
+ Views provide a level of abstraction over the physical database schema. If the underlying table structure changes, you might only need to update the view definition, and applications querying the view might not be affected. This promotes consistency and reduces the impact of schema modifications.
+
+..> Customized Data Presentation: 
+Views allow you to present data in a specific format or with calculated columns that are not directly stored in the base tables.
+
+
+
+INSTEAD OF WRITING EVERY TIME CMOPLEX QUERIES WE JUST CREATE THE VIEW FOR THAT QUER AND WE JUST HIT THE VIEW THEN IT WILL ,  THIS VIEW WILL REDICT TO THE TEH TABLE WITH TEH VIEW QUEY IS THIS CORRECT,
+
+OR ELSE, 
+
+LIKE INDEXING , WHEN WE CREATE TEH VIEW IT WILL FETCH THE DATA FROM THE , TABLE ACCORDINGLY AND IT WILL KEEP THE RESULT FOR THAT PARTICULAR QUEY, WHEN WE CALL THAT VIEW WE GET TEH DATA FROM TEH VIEW, 
+
+
+
+
+CREATING A VIEW:
+================ >
+
+NOTE :- 
+A view in MySQL can be created based on a single table or multiple tables.
+
+SYNTAX:
+
+1) Create a View Based On Single Table:-
+
+
+syntax:-
+
+CREATE VIEW <view_name> AS
+SELECT <column1>, <column2>......., <columnN> 
+FROM <table-name> 
+WHERE [conditions];
+
+ex:-
+CREATE VIEW IITHyderabadStudentsView AS
+SELECT sid, sname, age 
+FROM StudentDetails
+WHERE university = "IIT Hyderabad";
+
+
+
+
+
+2) Create a View Based On Multiple Tables With JOIN Clause :-
+
+..> We can create a view by joining multiple tables using the JOIN clause and additionally using WHERE keyword or GROUP BY, HAVING clauses.
+
+Syntax:
+
+CREATE VIEW <view_name> AS
+SELECT <column1>, <column2>......., <columnN> 
+FROM <table1> 
+[ INNER | LEFT | RIGHT | FULL ]  JOIN <table2> ON <joining-column>
+WHERE [condition1 | condition2 | ......];
+
+ex:-
+
+
+
+
+UPDATING A VIEW:-
+=================== >
+
+
+NOTEPOINT:- 
+If any one of these conditions is not met, then we are not allowed to update the view.
+
+1) The View should be created from a single table. If the view is created using multiple tables then we will not be allowed to update the view.
+2) The View should not be created using nested queries or complex queries.
+3) The View should have all NOT NULL values.
+4) The SELECT statement should not have the DISTINCT keyword.
+5) The SELECT statement which is used to create the view should not include GROUP BY clause or ORDER BY clause.
+
+
+
+
+
+To update the view for adding or remove columns and rows by changing WHERE clause condition, we can use CREATE OR REPLACE VIEW statement.
+
+Syntax:
+
+CREATE OR REPLACE VIEW <view_name> AS
+SELECT <column1>, <column2>, ........., <columnN>
+FROM <table_name>
+WHERE [condition];
+
+
+
+ex:-
+
+CREATE OR REPLACE VIEW IITHyderabadStudentsView AS
+SELECT sname, age 
+FROM StudentDetails
+WHERE university = "IIT Hyderabad";
+
+INSERTING IN TO A VIEW:-
+===================================== >
+
+Insert Into View
+To insert the new row into the view, we can do it in a similar way just like how we do it for normal tables.
+
+INSERT INTO <view_name>(<column1>, <column2>, <column3>,.........) 
+VALUES(<value1>, <value2>, <value3>,...........);
+
+
+
+DELETEING FROM THE VIEWS:-
+
+DELETE FROM <view_name> WHERE [condition];
+
+
+DROPING A VIEW:-
+======================= >
+
+
+drop view <view_name>;
+
+DROP VIEW employee1_detils;
+
+
+TO SEE THE VIEWS:-
+======================== >
+
+
+....> MySQL treats the views as tables with the type 'VIEW'. 
+....> Therefore, you can use the SHOW FULL TABLES statement to display all views in the current database as follows:
+
+
+SHOW FULL TABLES 
+WHERE table_type = 'VIEW';
+
+
+
+....> If you want to show all views in a specific database, you can use the FROM or IN clause in the SHOW FULL TABLES statement:
+
+SHOW FULL TABLES
+[{FROM | IN } database_name]
+WHERE table_type = 'VIEW';
+
+
+....> If you want to find views that match a pattern, you can use the LIKE clause as follows:-
+
+SHOW FULL TABLES
+[{FROM | IN } database_name]
+LIKE pattern;
+
+RENAMING OF THE TABLE:-
+=================================== >
+
+..> In MySQL, views and tables share the same namespace. Therefore, WE can use the RENAME TABLE statement to rename a view.
+
+SYNTAX:
+
+RENAME TABLE <original_view_name> TO <new_view_name>;
+
+
+
+
+
+NOTE POINT :
+============== >
+
+..> MySQL even allows you to create a view that does not refer to any table.
+
+EX: TO GET THE DAY'S OF THE WEEK.
+
+CREATE VIEW DAYS_OF_WEEK (DAY) AS
+SELECT 'MON'
+UNION
+SELECT 'TUE'
+UNION
+SELECT 'WED'
+UNION
+SELECT 'THU'
+UNION
+SELECT 'FRI'
+UNION
+SELECT 'SAT'
+UNION
+SELECT 'SUN';
+
+SELECT * FROM days_of_week;
+
+
+
+EX:  TO GET THE MONTHS'S OF THE YEAR:
+
+CREATE  VIEW MONTHS_OF_YEAR (MONTH) AS
+SELECT 'JAN'
+UNION
+SELECT 'FEB'
+UNION
+SELECT 'MAR'
+UNION
+SELECT 'APR'
+UNION
+SELECT 'MAY'
+UNION
+SELECT 'JUN'
+UNION
+SELECT 'JULY'
+UNION
+SELECT 'AUG'
+UNION
+SELECT 'SEP'
+UNION
+SELECT 'OCT'
+UNION
+SELECT 'NOV'
+UNION
+SELECT 'DEC';
+
+SELECT * FROM months_of_year;
